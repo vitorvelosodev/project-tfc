@@ -2,7 +2,7 @@ import { Model, QueryInterface, DataTypes } from 'sequelize';
 import IMatches from '../../Interfaces/IMatches';
 
 export default {
-  up(queryInterface: QueryInterface) {
+  up (queryInterface: QueryInterface) {
     return queryInterface.createTable<Model<IMatches>>('matches', {
       id: {
         type: DataTypes.INTEGER,
@@ -46,6 +46,6 @@ export default {
     });
   },
   down(queryInterface: QueryInterface) {
-    return queryInterface.dropTable('users');
+    return queryInterface.dropTable('matches');
   },
 };
