@@ -4,9 +4,11 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import Example from '../database/models/ExampleModel';
+// import Example from '../../database/models/ExampleModel';
+import SequelizeTeams from '../database/models/SequelizeTeams';
 
 import { Response } from 'superagent';
+const allTeams = require('./mocks/teamsArray.json');
 
 chai.use(chaiHttp);
 
@@ -19,27 +21,31 @@ describe('Seu teste', () => {
 
   let chaiHttpResponse: Response;
 
-  beforeEach(async () => {
-    sinon
-      .stub(Example, "findOne")
-      .resolves({
-        ...<Seu mock>
-      } as Example);
-  });
-
   afterEach(()=>{
-    (Example.findOne as sinon.SinonStub).restore();
+    sinon.restore();
   })
 
-  it('...', async () => {
-    chaiHttpResponse = await chai
-       .request(app)
-       ...
+  it('should return the list of all books', async function() {
+    sinon.stub(SequelizeTeams, 'findAll').resolves(allTeams as any);
+    chaiHttpResponse = await chai.request(app).get('/teams');
 
-    expect(...)
+    expect(chaiHttpResponse.status).to.equal(200);
+    expect(chaiHttpResponse.body).to.deep.equal(allTeams)
   });
 
-  it('Seu sub-teste', () => {
-    expect(false).to.be.eq(true);
+  it('should return one book when searched by id', async function () {
+    sinon.stub(SequelizeTeams, 'findByPk').resolves(allTeams[0] as any);
+    chaiHttpResponse = await chai.request(app).get('/teams/1');
+
+    expect(chaiHttpResponse.status).to.equal(200);
+    expect(chaiHttpResponse.body).to.deep.equal(allTeams[0]);
+  });
+
+  it('should return return an error when id doesnt exist', async function () {
+    sinon.stub(SequelizeTeams, 'findByPk').resolves(null);
+    chaiHttpResponse = await chai.request(app).get('/teams/99999');
+
+    expect(chaiHttpResponse.status).to.equal(404);
+    expect(chaiHttpResponse.body).to.deep.equal({ message: "Team of id 99999 not found" })
   });
 });
