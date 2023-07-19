@@ -16,7 +16,6 @@ export default class LoginService {
     return JWT.createToken({ email });
   }
 
-  // eslint-disable-next-line max-lines-per-function
   public async getUser(email: IUsers['email'], password: IUsers['password'])
     : Promise<ServiceResponse<{ token: string }> | ServiceResponseError> {
     const user = await this.userModel.findOne(email);
@@ -37,7 +36,7 @@ export default class LoginService {
           message: 'Invalid email or password',
         } };
     }
-    console.log('Cheguei aqui no Service');
+
     return { status: 'SUCCESSFUL', data: { token: LoginService.generateToken(email) } };
   }
 }
