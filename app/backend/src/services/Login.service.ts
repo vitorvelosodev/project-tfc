@@ -16,10 +16,13 @@ export default class LoginService {
     return JWT.createToken({ email });
   }
 
-  public async getUser(email: IUsers['email'], password: IUsers['password'])
+  private role: string | null = null;
+
+  public async loginUser(email: IUsers['email'], password: IUsers['password'])
     : Promise<ServiceResponse<{ token: string }> | ServiceResponseError> {
     const user = await this.userModel.findOne(email);
-    if (user === null) {
+    if (user === null || !LoginService.verifyCredentials(user.password, password)) {
+      this.role = null;
       return {
         status: 'NOT_FOUND',
         data: {
@@ -27,16 +30,12 @@ export default class LoginService {
         },
       };
     }
-
-    const passwordMatch = LoginService.verifyCredentials(user.password, password);
-
-    if (!passwordMatch) {
-      return { status: 'INVALID_DATA',
-        data: {
-          message: 'Invalid email or password',
-        } };
-    }
+    this.role = user?.role;
 
     return { status: 'SUCCESSFUL', data: { token: LoginService.generateToken(email) } };
+  }
+
+  public async getRole() {
+    return this.role;
   }
 }
