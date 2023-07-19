@@ -13,17 +13,13 @@ COPY packages.npm .
 RUN npm install
 
 # Copiar o restante dos arquivos da aplicação para o container
-COPY src src
-COPY .eslintignore .
-COPY .eslintrc.json .
-COPY .sequelizerc .
-COPY nyc.config.js .
-COPY tsconfig.json .
+COPY . .
 
 # Sinalize que aplicação expõe a porta 3001
 EXPOSE 3001
 
 # Configurar os comandos para iniciar a aplicação de acordo com as boas práticas
-CMD [ "npm", "run", "dev" ]
+ENTRYPOINT ["npm", "run"]
+CMD [ "dev" ]
 
 # Dica: Leia a seção Docker e Docker-compose no README para mais informações
