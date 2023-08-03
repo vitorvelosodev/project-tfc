@@ -21,7 +21,28 @@ export default class MatchesController {
 
   public async finishMatch(req: Request, res: Response) : Promise<Response> {
     const { id } = req.params;
-    const finishGame = await this.matchesService.finishMatch(id as unknown as number);
-    return res.status(200).json(finishGame.data);
+    const finishedMatch = await this.matchesService.finishMatch(id as unknown as number);
+    return res.status(200).json(finishedMatch.data);
+  }
+
+  public async updateMatch(req: Request, res: Response) : Promise<Response> {
+    const { id } = req.params;
+    const { body } = req;
+    const updatedMatch = await this.matchesService.updateMatch(id as unknown as number, body);
+    return res.status(200).json(updatedMatch.data);
+  }
+
+  public async createMatch(req: Request, res: Response) : Promise<Response> {
+    const { body } = req;
+    const { homeTeamId, awayTeamId } = body;
+    if (homeTeamId === awayTeamId) {
+      return res.status(422)
+        .json({ message: 'It is not possible to create a match with two equal teams' });
+    }
+    const createMatch = await this.matchesService.createMatch(body);
+    if (createMatch.status !== 'SUCCESSFUL') {
+      return res.status(404).json(createMatch.data);
+    }
+    return res.status(201).json(createMatch.data);
   }
 }

@@ -2,6 +2,8 @@ import SequelizeTeams from '../database/models/SequelizeTeams';
 import IMatches from '../Interfaces/IMatches';
 import { IMatchesModel } from '../Interfaces/IMatchesModel';
 import SequelizeMatches from '../database/models/SequelizeMatches';
+import IUpdateBody from '../Interfaces/IUpdateBody';
+import ICreateMatch from '../Interfaces/ICreateBody';
 
 export default class MatchesModel implements IMatchesModel {
   private model = SequelizeMatches;
@@ -46,5 +48,37 @@ export default class MatchesModel implements IMatchesModel {
     );
 
     return null;
+  }
+
+  async updateMatch(id: number, body: IUpdateBody): Promise<null> {
+    await this.model.update(
+      {
+        homeTeamGoals: body.homeTeamGoals,
+        awayTeamGoals: body.awayTeamGoals,
+      },
+      {
+        where: { id },
+      },
+    );
+
+    return null;
+  }
+
+  async createMatch(body: ICreateMatch): Promise<IMatches> {
+    const { awayTeamGoals,
+      homeTeamGoals,
+      awayTeamId,
+      homeTeamId } = body;
+    const createdMatch = await this.model.create(
+      {
+        awayTeamGoals,
+        homeTeamGoals,
+        awayTeamId,
+        homeTeamId,
+        inProgress: true,
+      },
+    );
+
+    return createdMatch.dataValues;
   }
 }

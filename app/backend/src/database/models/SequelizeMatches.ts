@@ -23,6 +23,7 @@ SequelizeMatches.init({
     type: DataTypes.INTEGER,
     allowNull: false,
     primaryKey: true,
+    autoIncrement: true,
   },
   homeTeamId: {
     type: DataTypes.NUMBER,
