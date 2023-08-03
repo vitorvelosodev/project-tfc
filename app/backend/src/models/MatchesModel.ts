@@ -22,7 +22,7 @@ export default class MatchesModel implements IMatchesModel {
     } else {
       inProgress = 0;
     }
-    console.log(inProgress);
+
     const dbData = await this.model.findAll({
       include: [
         { model: SequelizeTeams, as: 'homeTeam', attributes: { exclude: ['id'] } },
@@ -33,5 +33,18 @@ export default class MatchesModel implements IMatchesModel {
       },
     });
     return dbData;
+  }
+
+  async finishMatch(id: number): Promise<null> {
+    await this.model.update(
+      {
+        inProgress: false,
+      },
+      {
+        where: { id },
+      },
+    );
+
+    return null;
   }
 }
