@@ -25,7 +25,7 @@ describe('Seu teste', () => {
     sinon.restore();
   })
 
-  it('should return the list of all books', async function() {
+  it('should return the list of all Teams', async function() {
     sinon.stub(SequelizeTeams, 'findAll').resolves(allTeams as any);
     chaiHttpResponse = await chai.request(app).get('/teams');
 
@@ -33,7 +33,7 @@ describe('Seu teste', () => {
     expect(chaiHttpResponse.body).to.deep.equal(allTeams)
   });
 
-  it('should return one book when searched by id', async function () {
+  it('should return one Team when searched by id', async function () {
     sinon.stub(SequelizeTeams, 'findByPk').resolves(allTeams[0] as any);
     chaiHttpResponse = await chai.request(app).get('/teams/1');
 
