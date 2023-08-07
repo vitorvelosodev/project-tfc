@@ -38,7 +38,7 @@ export default class LeaderboardService {
     ));
   }
 
-  static win(argLeaderboard: ILeaderboard[], i) {
+  static win(argLeaderboard: ILeaderboard[], i: number) {
     const leaderboard = argLeaderboard;
     leaderboard[i].totalPoints += 3;
     leaderboard[i].totalVictories += 1;
@@ -46,7 +46,7 @@ export default class LeaderboardService {
     return leaderboard;
   }
 
-  static draw(argLeaderboard: ILeaderboard[], i) {
+  static draw(argLeaderboard: ILeaderboard[], i: number) {
     const leaderboard = argLeaderboard;
     leaderboard[i].totalDraws += 1;
     leaderboard[i].totalPoints += 1;
