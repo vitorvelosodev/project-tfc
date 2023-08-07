@@ -38,7 +38,7 @@ export default class LeaderboardService {
     ));
   }
 
-  static homeWin(argLeaderboard: ILeaderboard[], i) {
+  static win(argLeaderboard: ILeaderboard[], i) {
     const leaderboard = argLeaderboard;
     leaderboard[i].totalPoints += 3;
     leaderboard[i].totalVictories += 1;
@@ -46,7 +46,7 @@ export default class LeaderboardService {
     return leaderboard;
   }
 
-  static homeDraw(argLeaderboard: ILeaderboard[], i) {
+  static draw(argLeaderboard: ILeaderboard[], i) {
     const leaderboard = argLeaderboard;
     leaderboard[i].totalDraws += 1;
     leaderboard[i].totalPoints += 1;
@@ -54,7 +54,7 @@ export default class LeaderboardService {
     return leaderboard;
   }
 
-  static createLB(initialLeaderboard: ILeaderboard[], matches: IMatchesPlus[]): ILeaderboard[] {
+  static createHomeLB(initialLeaderboard: ILeaderboard[], matches: IMatchesPlus[]): ILeaderboard[] {
     let leaderBoard = initialLeaderboard;
     leaderBoard.forEach((team, i) => {
       matches.forEach((match) => {
@@ -63,11 +63,32 @@ export default class LeaderboardService {
           leaderBoard[i].goalsFavor += match.homeTeamGoals;
           leaderBoard[i].goalsOwn += match.awayTeamGoals;
           if (match.homeTeamGoals > match.awayTeamGoals) {
-            leaderBoard = LeaderboardService.homeWin(leaderBoard, i);
+            leaderBoard = LeaderboardService.win(leaderBoard, i);
           } else if (match.homeTeamGoals < match.awayTeamGoals) {
             leaderBoard[i].totalLosses += 1;
           } else {
-            leaderBoard = LeaderboardService.homeDraw(leaderBoard, i);
+            leaderBoard = LeaderboardService.draw(leaderBoard, i);
+          }
+        }
+      });
+    });
+    return leaderBoard;
+  }
+
+  static createAwayLB(initialLeaderboard: ILeaderboard[], matches: IMatchesPlus[]): ILeaderboard[] {
+    let leaderBoard = initialLeaderboard;
+    leaderBoard.forEach((team, i) => {
+      matches.forEach((match) => {
+        if (match.awayTeam.teamName === team.name) {
+          leaderBoard[i].totalGames += 1;
+          leaderBoard[i].goalsFavor += match.awayTeamGoals;
+          leaderBoard[i].goalsOwn += match.homeTeamGoals;
+          if (match.awayTeamGoals > match.homeTeamGoals) {
+            leaderBoard = LeaderboardService.win(leaderBoard, i);
+          } else if (match.awayTeamGoals < match.homeTeamGoals) {
+            leaderBoard[i].totalLosses += 1;
+          } else {
+            leaderBoard = LeaderboardService.draw(leaderBoard, i);
           }
         }
       });
@@ -80,7 +101,17 @@ export default class LeaderboardService {
 
     const initialLeaderboard = LeaderboardService.generateInitialLeaderboard(matches);
 
-    const leaderboard = LeaderboardService.createLB(initialLeaderboard, matches as any);
+    const leaderboard = LeaderboardService.createHomeLB(initialLeaderboard, matches as any);
+
+    return { status: 'SUCCESSFUL', data: leaderboard };
+  }
+
+  public async awayLeaderboard(): Promise<ServiceResponse<ILeaderboard[]>> {
+    const matches = await this.matchesModel.findInProgress('false');
+
+    const initialLeaderboard = LeaderboardService.generateInitialLeaderboard(matches);
+
+    const leaderboard = LeaderboardService.createAwayLB(initialLeaderboard, matches as any);
 
     return { status: 'SUCCESSFUL', data: leaderboard };
   }
