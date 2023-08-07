@@ -17,7 +17,7 @@ export default class MatchesModel implements IMatchesModel {
     return dbData;
   }
 
-  async findInProgress(bool: string): Promise<IMatches[] | null> {
+  async findInProgress(bool: string): Promise<IMatches[]> {
     let inProgress;
     if (bool === 'true') {
       inProgress = 1;
