@@ -4,7 +4,6 @@ import { ServiceResponse } from '../Interfaces/ServiceResponse';
 import IUpdateBody from '../Interfaces/IUpdateBody';
 import ICreateMatch from '../Interfaces/ICreateBody';
 import TeamsModel from '../models/TeamsModel';
-// ServiceResponseError
 
 export default class MatchesService {
   constructor(
