@@ -2,57 +2,6 @@
 
 Este é o README do projeto TFC, que consiste em um site informativo sobre partidas e classificações de futebol. Neste projeto, o foco é o desenvolvimento do back-end dockerizado e integração com o front-end por meio de uma API, seguindo regras de negócio específicas.
 
-# Executando a Aplicação com Docker
-
-Se preferir executar a aplicação usando Docker, siga as instruções abaixo.
-
-## Pré-requisitos
-
-Certifique-se de atender aos seguintes requisitos:
-
-- O seu `docker-compose` deve estar na versão 1.29 ou superior. Se necessário, consulte a documentação para atualizar.
-
-## Inicializando os Serviços
-
-Para iniciar os serviços Node.js e MySQL em containers Docker, siga os passos abaixo:
-
-1. Abra o terminal.
-
-2. Navegue até o diretório raiz do projeto onde está localizado o arquivo `docker-compose.yml`.
-
-3. Execute o seguinte comando para construir e iniciar os containers:
-
-   ```bash
-   docker-compose up -d --build
-   
-Certifique-se de que o MySQL local não esteja em execução na porta padrão (3306) ou faça as adaptações necessárias nas configurações se você desejar utilizar a aplicação em containers.
-
-## Acessando o Terminal Interativo do Container
-Para acessar o terminal interativo do container onde a aplicação está sendo executada, utilize o seguinte comando:
-   ```bash
-   docker exec -it blogs_api
-   ```
-
-Isso permitirá que você acesse o terminal dentro do container em execução.
-
-## Instalando Dependências (Dentro do Container)
-Dentro do container, você pode instalar as dependências necessárias com o seguinte comando:
-
-   ```bash
-   npm install
-   ```
-
-### ⚠️ Atenção:
-
-Todos os comandos disponíveis no package.json (como npm start, npm test, npm run dev, etc.) devem ser executados dentro do container, ou seja, no terminal aberto após a execução do comando docker exec mencionado acima.
-
-O Git dentro do container não virá configurado com suas credenciais. Você pode optar por fazer commits fora do container ou configurar suas credenciais do Git dentro do container conforme necessário.
-
-Evite rodar o comando npm audit fix, pois ele atualizará várias dependências do projeto e pode gerar conflitos com o avaliador.
-
-## ✨ Dica
-A extensão "Remote - Containers" do Visual Studio Code é recomendada para desenvolver sua aplicação diretamente no container Docker, como se estivesse trabalhando com seus arquivos locais.
-
 ## Descrição do Projeto
 
 O projeto TFC é uma aplicação que fornece informações sobre partidas de futebol e a classificação dos times. Ele inclui os seguintes fluxos principais:
